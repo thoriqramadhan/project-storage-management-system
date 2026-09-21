@@ -5,6 +5,7 @@ from client.config import SERVER_HOST, SERVER_PORT
 from client.identity import get_client_identity
 from client.connection import connect_to_server
 from client.menu import display_menu
+
 from client.item_operation import(
     add_item,
     update_stock,

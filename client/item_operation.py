@@ -5,8 +5,8 @@ def add_item(client_socket):
 
     name = input("Nama barang   : ")
     category_id = input("ID kategori   : ")
+    rack_id = input("ID rak   : ")
     stock = input("Stock         : ")
-    unit = input("Unit          : ")
 
     # Validasi input
     if not name:
@@ -15,62 +15,73 @@ def add_item(client_socket):
 
     try:
         category_id = int(category_id)
+        rack_id = int(rack_id)
         stock = int(stock)
     except ValueError:
-        print("ID kategori dan stock harus berupa angka.")
+        print("ID kategori, ID rak, dan stock harus berupa angka.")
         return
 
     if stock < 0:
         print("Stock tidak boleh negatif.")
         return
 
-    data = {
+    payload = {
         "name": name,
         "category_id": category_id,
+        "rack_id": rack_id,
         "stock": stock,
-        "unit": unit
     }
 
     response = send_request(
         client_socket,
-        "ADD_ITEM",
-        data
+        "ADD_ITEMS",
+        payload
     )
 
-    if response["status"] == "OK":
+    if response["status"] is True:
         print("\nBarang berhasil ditambahkan.")
     else:
         print("\nGagal:", response["message"])
 
+
+
 def update_stock(client_socket):
     print("\n=== UPDATE STOCK ===")
 
-    item_id = input("ID barang  : ")
-    stock = input("Stock baru : ")
+    item_id = input("ID barang    : ")
+    name = input("Nama barang  : ")
+    stock = input("Stock baru   : ")
+    category_id = input("ID kategori  : ")
+    rack_id = input("ID rak      : ")
 
     try:
         item_id = int(item_id)
         stock = int(stock)
+        category_id = int(category_id)
+        rack_id = int(rack_id)
     except ValueError:
-        print("ID barang dan stock harus berupa angka.")
+        print("Semua ID dan stock harus berupa angka.")
         return
 
     if stock < 0:
         print("Stock tidak boleh negatif.")
         return
 
-    data = {
+    payload = {
         "item_id": item_id,
-        "stock": stock
+        "name": name,
+        "stock": stock,
+        "category_id": category_id,
+        "rack_id": rack_id
     }
 
     response = send_request(
         client_socket,
-        "UPDATE_STOCK",
-        data
+        "UPDATE_STOCKS",
+        payload
     )
 
-    if response["status"] == "OK":
+    if response["status"] is True:
         print("\nStock berhasil diperbarui.")
     else:
         print("\nGagal:", response["message"])
@@ -92,17 +103,17 @@ def delete_item(client_socket):
         print("Penghapusan dibatalkan.")
         return
 
-    data = {
+    payload = {
         "item_id": item_id
     }
 
     response = send_request(
         client_socket,
-        "DELETE_ITEM",
-        data
+        "DELETE_ITEMS",
+        payload
     )
 
-    if response["status"] == "OK":
+    if response["status"] is True:
         print("\nBarang berhasil dihapus.")
     else:
         print("\nGagal:", response["message"])

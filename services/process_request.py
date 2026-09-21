@@ -1,19 +1,19 @@
 import tabulate
 
-from client.item_operation import send_request
+from client.connection import send_request
 
 def show_items(client_socket):
     print("\n=== DAFTAR BARANG ===")
 
     response = send_request(
         client_socket,
-        "GET_ITEMS",
+        "CHECK_STOCKS",
         {}
     )
 
-    if response["status"] == "OK":
+    if response["status"] is True:
 
-        items = response["data"]
+        items = response["datas"]
 
         if not items:
             print("Tidak ada data barang.")
@@ -45,4 +45,4 @@ def show_items(client_socket):
         )
 
     else:
-        print("Gagal:", response["message"])
+        print("Gagal:", response["messages"])

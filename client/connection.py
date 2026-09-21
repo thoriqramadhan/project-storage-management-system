@@ -13,19 +13,19 @@ def connect_to_server():
 
     return client_socket
 
-def send_request(client_socket, action, data):
+def send_request(client_socket, action, payload):
     request = {
         "action": action,
-        "data": data
+        "payload": payload
     }
 
     request_json = json.dumps(request)
 
-    client_socket.sendall(request_json.encode())
+    client_socket.sendall(request_json.encode("utf-8"))
 
     response = client_socket.recv(4096)
 
-    response_json = response.decode()
+    response_json = response.decode("utf-8")
 
     response_data = json.loads(response_json)
 

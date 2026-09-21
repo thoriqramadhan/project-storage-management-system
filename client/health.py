@@ -9,7 +9,7 @@ def check_server_health(client_socket):
 
     response = send_request(
         client_socket,
-        "CHECK_HEALTH",
+        "CHECK_SERVER_STATUS",
         {}
     )
 
@@ -17,9 +17,9 @@ def check_server_health(client_socket):
 
     latency = (end_time - start_time) * 1000
 
-    if response["status"] == "OK":
+    if response["status"] is True:
 
-        data = response["data"]
+        data = response["datas"]
 
         print("------------------------------------")
         print("Server Status :", data["status"])
@@ -30,4 +30,4 @@ def check_server_health(client_socket):
         print("------------------------------------")
 
     else:
-        print("\nGagal:", response["message"])
+        print("\nGagal:", response["messages"])
