@@ -1,3 +1,7 @@
+import tabulate
+
+from client.item_operation import send_request
+
 def show_items(client_socket):
     print("\n=== DAFTAR BARANG ===")
 

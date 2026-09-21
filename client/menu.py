@@ -1,0 +1,11 @@
+def display_menu():
+    print("\n====================================")
+    print("      STORAGE MANAGEMENT CLIENT")
+    print("====================================")
+    print("1. Lihat Stok Barang")
+    print("2. Tambah Barang")
+    print("3. Update Stok")
+    print("4. Hapus Barang")
+    print("5. Cek Status Server")
+    print("6. Keluar")
+    print("====================================")
