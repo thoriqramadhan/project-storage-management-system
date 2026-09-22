@@ -17,11 +17,11 @@ def _show_category_and_rack(client_socket):
     racks = rack_res.get("datas") or []
     
     print("\n[ Kategori Tersedia ]")
-    cat_table = [[c[0], c[1]] if isinstance(c, (list, tuple)) else [c.get("id"), c.get("name")] for c in categories]
+    cat_table = [[c.get("id"), c.get("name")] for c in categories]
     print(tabulate(cat_table, headers=["ID Kategori", "Nama Kategori"], tablefmt="simple_grid"))
 
     print("\n[ Rak Tersedia ]")
-    rack_table = [[r[0], r[1]] if isinstance(r, (list, tuple)) else [r.get("id"), r.get("name")] for r in racks]
+    rack_table = [[r.get("id"), r.get("name")] for r in racks]
     print(tabulate(rack_table, headers=["ID Rak", "Nama Rak"], tablefmt="simple_grid"))
     print()
     return True

@@ -1,4 +1,4 @@
-import tabulate
+from tabulate import tabulate
 
 from client.connection import send_request
 
@@ -23,11 +23,11 @@ def show_items(client_socket):
 
         for item in items:
             table.append([
-                item["id"],
-                item["name"],
-                item["category"],
-                item["stock"],
-                item["unit"]
+                item.get("id"),
+                item.get("name"),
+                item.get("category", "-"),
+                item.get("stock"),
+                item.get("unit", "-")
             ])
 
         print(

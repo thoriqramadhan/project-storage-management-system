@@ -32,5 +32,15 @@ def send_request(client_socket, action, payload):
 
     response_data = json.loads(response_json)
 
+    # Normalize response to handle changes from the server API
+    if "status" in response_data and isinstance(response_data["status"], str):
+        response_data["status"] = True if response_data["status"].lower() == "sucess" or response_data["status"].lower() == "success" else False
+        
+    if "message" in response_data and "messages" not in response_data:
+        response_data["messages"] = response_data["message"]
+        
+    if "data" in response_data and "datas" not in response_data:
+        response_data["datas"] = response_data["data"]
+
     return response_data
 
