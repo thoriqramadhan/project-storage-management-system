@@ -10,22 +10,82 @@ if script_dir in sys.path:
     sys.path.remove(script_dir)
 
 import socket
-from tabulate import tabulate
 from client.config import SERVER_HOST, SERVER_PORT
 from client.identity import get_client_identity
 from client.connection import connect_to_server
-from client.menu import display_menu
-
-from client.item_operation import(
-    add_item,
-    update_stock,
-    delete_item
+from client.menu import (
+    display_main_menu,
+    display_item_menu,
+    display_rack_menu,
+    display_category_menu,
+    display_system_menu
 )
-from client.health import check_server_health
+
+from client.item_operation import add_item, update_stock, delete_item
 from services.process_request import show_items
+from client.rack_operation import show_racks, add_rack, edit_rack
+from client.category_operation import show_categories, add_category, edit_category
+from client.health import check_server_health, show_access_logs
 
+def item_loop(client_socket):
+    while True:
+        display_item_menu()
+        choice = input("Pilih menu barang: ")
+        if choice == "1":
+            show_items(client_socket)
+        elif choice == "2":
+            add_item(client_socket)
+        elif choice == "3":
+            update_stock(client_socket)
+        elif choice == "4":
+            delete_item(client_socket)
+        elif choice == "5":
+            break
+        else:
+            print("\nPilihan tidak valid.")
 
+def rack_loop(client_socket):
+    while True:
+        display_rack_menu()
+        choice = input("Pilih menu rak: ")
+        if choice == "1":
+            show_racks(client_socket)
+        elif choice == "2":
+            add_rack(client_socket)
+        elif choice == "3":
+            edit_rack(client_socket)
+        elif choice == "4":
+            break
+        else:
+            print("\nPilihan tidak valid.")
 
+def category_loop(client_socket):
+    while True:
+        display_category_menu()
+        choice = input("Pilih menu kategori: ")
+        if choice == "1":
+            show_categories(client_socket)
+        elif choice == "2":
+            add_category(client_socket)
+        elif choice == "3":
+            edit_category(client_socket)
+        elif choice == "4":
+            break
+        else:
+            print("\nPilihan tidak valid.")
+
+def system_loop(client_socket):
+    while True:
+        display_system_menu()
+        choice = input("Pilih menu sistem: ")
+        if choice == "1":
+            check_server_health(client_socket)
+        elif choice == "2":
+            show_access_logs(client_socket)
+        elif choice == "3":
+            break
+        else:
+            print("\nPilihan tidak valid.")
 
 
 def main():
@@ -38,65 +98,41 @@ def main():
     print("IP       :", ip_address)
 
     print("\nConnecting to server...")
-    print(
-        "Server   :",
-        SERVER_HOST,
-        ":",
-        SERVER_PORT
-    )
+    print("Server   :", SERVER_HOST, ":", SERVER_PORT)
 
     try:
         client_socket = connect_to_server()
-
     except ConnectionRefusedError:
         print("\nGagal terhubung ke server.")
-        print("Pastikan server.py sedang berjalan.")
         return
-
     except socket.timeout:
         print("\nKoneksi ke server timeout.")
         return
-
     except OSError as error:
         print("\nConnection error:", error)
         return
 
     print("Connected to server!")
 
-
     while True:
-
-        display_menu()
-
-        choice = input("Pilih menu: ")
+        display_main_menu()
+        choice = input("Pilih menu utama: ")
 
         if choice == "1":
-            show_items(client_socket)
-
+            item_loop(client_socket)
         elif choice == "2":
-            add_item(client_socket)
-
+            rack_loop(client_socket)
         elif choice == "3":
-            update_stock(client_socket)
-
+            category_loop(client_socket)
         elif choice == "4":
-            delete_item(client_socket)
-
+            system_loop(client_socket)
         elif choice == "5":
-            check_server_health(client_socket)
-
-        elif choice == "6":
             print("\nDisconnecting...")
-
             client_socket.close()
-
             print("Client ditutup.")
             break
-
         else:
             print("\nPilihan tidak valid.")
-            print("Silakan pilih menu 1-6.")
-
 
 if __name__ == "__main__":
     main()

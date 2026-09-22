@@ -1,5 +1,5 @@
 
 # SERVER_HOST = "127.0.0.1"
-SERVER_HOST = "nyzdx-114-4-215-133.run.pinggy-free.link"
+SERVER_HOST = "tthgx-114-4-215-133.run.pinggy-free.link"
 # SERVER_PORT = 5000
-SERVER_PORT = 41829
+SERVER_PORT = 36187

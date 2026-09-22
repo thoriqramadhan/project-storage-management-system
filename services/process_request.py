@@ -17,17 +17,28 @@ def show_items(client_socket):
 
         if not items:
             print("Tidak ada data barang.")
-            return
+            return []
 
         table = []
 
         for item in items:
+            # Server returns: id, name, stock, rack_id, category_id, category_name, rack_name, updated_at
+            cat_name = "-"
+            rack_name = "-"
+            
+            if isinstance(item, dict):
+                cat_name = item.get("category_name", item.get("category_id", "-"))
+                rack_name = item.get("rack_name", item.get("rack_id", "-"))
+            elif len(item) > 6:
+                cat_name = item[5] if item[5] is not None else "-"
+                rack_name = item[6] if item[6] is not None else "-"
+
             table.append([
-                item.get("id"),
-                item.get("name"),
-                item.get("category", "-"),
-                item.get("stock"),
-                item.get("unit", "-")
+                item.get("id") if isinstance(item, dict) else item[0],
+                item.get("name") if isinstance(item, dict) else item[1],
+                cat_name,
+                rack_name,
+                item.get("stock") if isinstance(item, dict) else item[2]
             ])
 
         print(
@@ -37,12 +48,14 @@ def show_items(client_socket):
                     "ID",
                     "Barang",
                     "Kategori",
-                    "Stock",
-                    "Unit"
+                    "Rak",
+                    "Stock"
                 ],
                 tablefmt="grid"
             )
         )
+        return items
 
     else:
         print("Gagal:", response["messages"])
+        return []

@@ -23,14 +23,22 @@ def send_request(client_socket, action, payload):
 
     client_socket.sendall(request_json.encode("utf-8"))
 
-    response = client_socket.recv(4096)
-    
+    buffer = b""
+    while True:
+        chunk = client_socket.recv(4096)
+        if not chunk:
+            raise ConnectionError("Server disconnected")
+        buffer += chunk
+        try:
+            response_json = buffer.decode("utf-8")
+            response_data = json.loads(response_json)
+            break
+        except ValueError:
+            # Continue reading if JSON is incomplete or UTF-8 decoding fails on boundary
+            continue
+            
     # Debug: print the raw response
-    print(f"DEBUG: raw response from server: {repr(response)}")
-
-    response_json = response.decode("utf-8")
-
-    response_data = json.loads(response_json)
+    # print(f"DEBUG: raw response string length: {len(buffer)}")
 
     # Normalize response to handle changes from the server API
     if "status" in response_data and isinstance(response_data["status"], str):

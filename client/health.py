@@ -2,32 +2,36 @@ import time
 
 from client.connection import send_request
 
+from tabulate import tabulate
+
 def check_server_health(client_socket):
     print("\n=== STATUS SERVER ===")
+    print("Fitur sementara dinonaktifkan.")
+    pass
 
-    start_time = time.time()
+def show_access_logs(client_socket):
+    print("\n=== LOG AKSES SERVER ===")
+    response = send_request(client_socket, "GET_ACCESS_LOGS", {})
 
-    response = send_request(
-        client_socket,
-        "CHECK_SERVER_STATUS",
-        {}
-    )
+    if response.get("status") is True:
+        logs = response.get("datas") or []
+        if not logs:
+            print("Tidak ada data log akses.")
+            return
 
-    end_time = time.time()
+        table = []
+        for log in logs:
+            if isinstance(log, (list, tuple)):
+                table.append([log[0], log[1], log[2], log[3], log[4]])
+            else:
+                table.append([
+                    log.get("id"),
+                    log.get("client_ip"),
+                    log.get("client_hostname"),
+                    log.get("action_performed"),
+                    log.get("created_at")
+                ])
 
-    latency = (end_time - start_time) * 1000
-
-    if response["status"] is True:
-
-        data = response["datas"]
-
-        print("------------------------------------")
-        print("Server Status :", data["status"])
-        print("Server IP     :", data["ip"])
-        print("CPU Usage     :", data["cpu"], "%")
-        print("RAM Usage     :", data["ram"], "%")
-        print("Latency       :", round(latency, 2), "ms")
-        print("------------------------------------")
-
+        print(tabulate(table, headers=["ID", "Client IP", "Hostname", "Action", "Waktu"], tablefmt="grid"))
     else:
-        print("\nGagal:", response["messages"])
+        print("\nGagal:", response.get("messages", "Terjadi kesalahan"))

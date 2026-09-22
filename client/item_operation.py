@@ -76,22 +76,78 @@ def add_item(client_socket):
 def update_stock(client_socket):
     print("\n=== UPDATE STOCK ===")
 
+    from services.process_request import show_items
+    items = show_items(client_socket)
+
+    item_id = input("\nID barang yang ingin diupdate: ")
+    if not item_id:
+        return
+        
+    try:
+        item_id = int(item_id)
+    except ValueError:
+        print("ID barang harus berupa angka.")
+        return
+        
+    # Find existing item
+    old_item = None
+    for item in items:
+        # handle list/dict format just in case
+        if isinstance(item, (list, tuple)):
+            if item[0] == item_id:
+                old_item = {"name": item[1], "stock": item[2]}
+                if len(item) > 4:
+                    old_item["rack_id"] = item[3]
+                    old_item["category_id"] = item[4]
+                break
+        else:
+            if item.get("id") == item_id:
+                old_item = {
+                    "name": item.get("name"), 
+                    "stock": item.get("stock"),
+                    "rack_id": item.get("rack_id"),
+                    "category_id": item.get("category_id")
+                }
+                break
+
+    if not old_item:
+        print(f"Barang dengan ID {item_id} tidak ditemukan.")
+        return
+
     if not _show_category_and_rack(client_socket):
         return
 
-    item_id = input("ID barang    : ")
-    name = input("Nama barang  : ")
-    stock = input("Stock baru   : ")
-    category_id = input("ID kategori  : ")
-    rack_id = input("ID rak       : ")
+    print("Catatan: Biarkan kosong (tekan Enter) jika tidak ingin mengubah data.")
+
+    name = input(f"Nama barang [{old_item['name']}]: ")
+    if not name:
+        name = old_item["name"]
+        
+    stock = input(f"Stock baru [{old_item['stock']}]: ")
+    if not stock:
+        stock = old_item["stock"]
+
+    cat_label = old_item.get("category_id") if old_item.get("category_id") is not None else "Wajib diisi"
+    category_id = input(f"ID kategori [{cat_label}]: ")
+    if not category_id and old_item.get("category_id") is not None:
+        category_id = old_item.get("category_id")
+
+    rack_label = old_item.get("rack_id") if old_item.get("rack_id") is not None else "Wajib diisi"
+    rack_id = input(f"ID rak [{rack_label}]: ")
+    if not rack_id and old_item.get("rack_id") is not None:
+        rack_id = old_item.get("rack_id")
+
+    # If the user still leaves it blank when it's Mandatory (no old data to fallback to)
+    if not category_id or not rack_id:
+        print("Kategori dan Rak wajib diisi jika data sebelumnya tidak tersedia.")
+        return
 
     try:
-        item_id = int(item_id)
         stock = int(stock)
         category_id = int(category_id)
         rack_id = int(rack_id)
     except ValueError:
-        print("Semua ID dan stock harus berupa angka.")
+        print("Stock, ID kategori, dan ID rak harus berupa angka.")
         return
 
     if stock < 0:
@@ -120,7 +176,10 @@ def update_stock(client_socket):
 def delete_item(client_socket):
     print("\n=== HAPUS BARANG ===")
 
-    item_id = input("ID barang yang akan dihapus: ")
+    from services.process_request import show_items
+    show_items(client_socket)
+
+    item_id = input("\nID barang yang akan dihapus: ")
 
     try:
         item_id = int(item_id)
