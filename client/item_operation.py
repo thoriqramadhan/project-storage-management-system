@@ -1,11 +1,39 @@
+from tabulate import tabulate
 from client.connection import send_request
 
+def _show_category_and_rack(client_socket):
+    print("\nMengambil data Kategori dan Rak...")
+    cat_res = send_request(client_socket, "GET_CATEGORY", {})
+    if cat_res.get("status") is not True:
+        print("Gagal mengambil data kategori:", cat_res.get("messages", "Error"))
+        return False
+        
+    rack_res = send_request(client_socket, "GET_RACK", {})
+    if rack_res.get("status") is not True:
+        print("Gagal mengambil data rak:", rack_res.get("messages", "Error"))
+        return False
+        
+    categories = cat_res.get("datas") or []
+    racks = rack_res.get("datas") or []
+    
+    print("\n[ Kategori Tersedia ]")
+    cat_table = [[c[0], c[1]] if isinstance(c, (list, tuple)) else [c.get("id"), c.get("name")] for c in categories]
+    print(tabulate(cat_table, headers=["ID Kategori", "Nama Kategori"], tablefmt="simple_grid"))
+
+    print("\n[ Rak Tersedia ]")
+    rack_table = [[r[0], r[1]] if isinstance(r, (list, tuple)) else [r.get("id"), r.get("name")] for r in racks]
+    print(tabulate(rack_table, headers=["ID Rak", "Nama Rak"], tablefmt="simple_grid"))
+    print()
+    return True
 def add_item(client_socket):
     print("\n=== TAMBAH BARANG ===")
+    
+    if not _show_category_and_rack(client_socket):
+        return
 
     name = input("Nama barang   : ")
     category_id = input("ID kategori   : ")
-    rack_id = input("ID rak   : ")
+    rack_id = input("ID rak        : ")
     stock = input("Stock         : ")
 
     # Validasi input
@@ -38,21 +66,24 @@ def add_item(client_socket):
         payload
     )
 
-    if response["status"] is True:
+    if response.get("status") is True:
         print("\nBarang berhasil ditambahkan.")
     else:
-        print("\nGagal:", response["message"])
+        print("\nGagal:", response.get("messages", "Terjadi kesalahan"))
 
 
 
 def update_stock(client_socket):
     print("\n=== UPDATE STOCK ===")
 
+    if not _show_category_and_rack(client_socket):
+        return
+
     item_id = input("ID barang    : ")
     name = input("Nama barang  : ")
     stock = input("Stock baru   : ")
     category_id = input("ID kategori  : ")
-    rack_id = input("ID rak      : ")
+    rack_id = input("ID rak       : ")
 
     try:
         item_id = int(item_id)
@@ -81,10 +112,10 @@ def update_stock(client_socket):
         payload
     )
 
-    if response["status"] is True:
+    if response.get("status") is True:
         print("\nStock berhasil diperbarui.")
     else:
-        print("\nGagal:", response["message"])
+        print("\nGagal:", response.get("messages", "Terjadi kesalahan"))
 
 def delete_item(client_socket):
     print("\n=== HAPUS BARANG ===")
@@ -113,8 +144,8 @@ def delete_item(client_socket):
         payload
     )
 
-    if response["status"] is True:
+    if response.get("status") is True:
         print("\nBarang berhasil dihapus.")
     else:
-        print("\nGagal:", response["message"])
+        print("\nGagal:", response.get("messages", "Terjadi kesalahan"))
 

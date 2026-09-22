@@ -24,6 +24,9 @@ def send_request(client_socket, action, payload):
     client_socket.sendall(request_json.encode("utf-8"))
 
     response = client_socket.recv(4096)
+    
+    # Debug: print the raw response
+    print(f"DEBUG: raw response from server: {repr(response)}")
 
     response_json = response.decode("utf-8")
 
