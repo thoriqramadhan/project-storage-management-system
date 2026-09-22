@@ -1,6 +1,16 @@
+import os
+import sys
+
+# Add project root to sys.path and remove script dir to prevent module shadowing
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+if script_dir in sys.path:
+    sys.path.remove(script_dir)
+
 import socket
 from tabulate import tabulate
-
 from client.config import SERVER_HOST, SERVER_PORT
 from client.identity import get_client_identity
 from client.connection import connect_to_server
@@ -19,7 +29,6 @@ from services.process_request import show_items
 
 
 def main():
-
     hostname, ip_address = get_client_identity()
 
     print("\n====================================")
