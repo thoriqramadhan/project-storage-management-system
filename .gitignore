@@ -1,0 +1,52 @@
+# ==========================================
+# 1. Environment & Credentials (Sangat Penting)
+# ==========================================
+.env
+.env.*
+*.pem
+*.key
+
+# ==========================================
+# 2. Python Bytecode & Cache
+# ==========================================
+# File kompilasi otomatis Python saat dijalankan
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ==========================================
+# 3. Virtual Environment
+# ==========================================
+# Folder venv lokal agar library tidak ikut ke-push
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ==========================================
+# 4. File Editor / IDE
+# ==========================================
+# Pengaturan VS Code / PyCharm yang bersifat personal
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==========================================
+# 5. OS Generated Files
+# ==========================================
+# File sampah dari sistem operasi (Windows / Mac)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# 6. Runtime & Log Files (Opsional)
+# ==========================================
+# File log yang terus berubah setiap server dites
+*.log
+# Jika ingin mengabaikan log aktivitas lokal:
+# log_aktivitas.txt
