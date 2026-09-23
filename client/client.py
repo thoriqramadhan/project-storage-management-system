@@ -87,6 +87,51 @@ def system_loop(client_socket):
         else:
             print("\nPilihan tidak valid.")
 
+def connect_with_retry():
+    while True:
+        print("\nConnecting to server...")
+        print(
+            "Server   :",
+            SERVER_HOST,
+            ":",
+            SERVER_PORT
+        )
+
+        try:
+            client_socket = connect_to_server()
+
+            print("Connected to server!")
+
+            return client_socket
+
+        except ConnectionRefusedError:
+            print("\nGagal terhubung ke server.")
+            print("Pastikan server.py sedang berjalan.")
+
+        except socket.timeout:
+            print("\nKoneksi ke server timeout.")
+
+        except OSError as error:
+            print("\nConnection error:", error)
+
+        print("\n====================================")
+        print("         CONNECTION FAILED")
+        print("====================================")
+        print("1. Reconnect to server")
+        print("2. Quit")
+        print("====================================")
+
+        choice = input("Pilih opsi: ")
+
+        if choice == "1":
+            print("\nMencoba reconnect...")
+
+        elif choice == "2":
+            print("\nClient ditutup.")
+            return None
+
+        else:
+            print("\nPilihan tidak valid.")
 
 def main():
     hostname, ip_address = get_client_identity()
