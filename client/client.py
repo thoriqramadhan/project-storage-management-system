@@ -31,18 +31,36 @@ def item_loop(client_socket):
     while True:
         display_item_menu()
         choice = input("Pilih menu barang: ")
-        if choice == "1":
-            show_items(client_socket)
-        elif choice == "2":
-            add_item(client_socket)
-        elif choice == "3":
-            update_stock(client_socket)
-        elif choice == "4":
-            delete_item(client_socket)
-        elif choice == "5":
-            break
-        else:
-            print("\nPilihan tidak valid.")
+
+        # Kembali ke menu utama
+        if choice == "5":
+            return client_socket
+
+        try:
+
+            if choice == "1":
+                show_items(client_socket)
+
+            elif choice == "2":
+                add_item(client_socket)
+
+            elif choice == "3":
+                update_stock(client_socket)
+
+            elif choice == "4":
+                delete_item(client_socket)
+
+            else:
+                print("\nPilihan tidak valid.")
+
+        except ConnectionError:
+            print("\nServer terputus.")
+
+            # Socket lama sudah tidak bisa dipakai
+            client_socket = None
+
+            # Tawarkan reconnect
+            client_socket = connect_with_retry()
 
 def rack_loop(client_socket):
     while True:
@@ -132,7 +150,7 @@ def connect_with_retry():
 
         elif choice == "2":
             print("\nClient ditutup.")
-            return None
+            raise SystemExit
 
         else:
             print("\nPilihan tidak valid.")
@@ -149,24 +167,26 @@ def main():
     print("\nConnecting to server...")
     print("Server   :", SERVER_HOST, ":", SERVER_PORT)
 
-    client_socket = connect_with_retry()
-
-    if client_socket is None:
-        return
+    # client_socket = connect_with_retry()
+    client_socket = None
+    # if client_socket is None:
+    #     return
 
     while True:
-        try: 
             display_main_menu()
             choice = input("Pilih menu utama: ")
 
             if choice == "1":
-                item_loop(client_socket)
+                client_socket = item_loop(client_socket)
+
             elif choice == "2":
-                rack_loop(client_socket)
+                client_socket = rack_loop(client_socket)
+
             elif choice == "3":
-                category_loop(client_socket)
+                client_socket = category_loop(client_socket)
+
             elif choice == "4":
-                system_loop(client_socket)
+                client_socket = system_loop(client_socket)
             elif choice == "5":
                 print("\nDisconnecting...")
                 client_socket.close()
@@ -174,7 +194,6 @@ def main():
                 break
             else:
                 print("\nPilihan tidak valid.")
-        except:
-            print(connect_with_retry())
+
 if __name__ == "__main__":
     main()

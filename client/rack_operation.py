@@ -96,6 +96,8 @@ def delete_rack(client_socket):
         "rack_id": rack_id
     }
 
+    print(payload)
+
     response = send_request(
         client_socket,
         "DELETE_RACK",
