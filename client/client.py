@@ -55,6 +55,8 @@ def rack_loop(client_socket):
         elif choice == "3":
             edit_rack(client_socket)
         elif choice == "4":
+            delete_rack(client_socket)
+        elif choice == "5":
             break
         else:
             print("\nPilihan tidak valid.")
@@ -70,6 +72,8 @@ def category_loop(client_socket):
         elif choice == "3":
             edit_category(client_socket)
         elif choice == "4":
+            delete_category(client_socket)
+        elif choice == "5":
             break
         else:
             print("\nPilihan tidak valid.")
