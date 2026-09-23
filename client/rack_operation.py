@@ -72,3 +72,40 @@ def edit_rack(client_socket):
         print("\nRak berhasil diupdate.")
     else:
         print("\nGagal:", response.get("messages", "Terjadi kesalahan"))
+
+def delete_rack(client_socket):
+    print("\n=== HAPUS RAK ===")
+
+    rack_id = input("ID rak yang akan dihapus: ")
+
+    try:
+        rack_id = int(rack_id)
+    except ValueError:
+        print("ID rak harus berupa angka.")
+        return
+
+    confirm = input(
+        "Yakin ingin menghapus rak ini? (y/n): "
+    )
+
+    if confirm.lower() != "y":
+        print("Penghapusan rak dibatalkan.")
+        return
+
+    payload = {
+        "rack_id": rack_id
+    }
+
+    response = send_request(
+        client_socket,
+        "DELETE_RACK",
+        payload
+    )
+
+    if response["status"] is True:
+        print("\nRak berhasil dihapus.")
+        print("Pesan:", response["messages"])
+    else:
+        print("\nGagal menghapus rak.")
+        print("Pesan:", response["messages"])
+   

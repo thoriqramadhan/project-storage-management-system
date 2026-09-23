@@ -25,6 +25,7 @@ def _show_category_and_rack(client_socket):
     print(tabulate(rack_table, headers=["ID Rak", "Nama Rak"], tablefmt="simple_grid"))
     print()
     return True
+     
 def add_item(client_socket):
     print("\n=== TAMBAH BARANG ===")
     

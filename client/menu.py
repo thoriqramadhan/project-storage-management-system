@@ -23,7 +23,8 @@ def display_rack_menu():
     print("1. Lihat Daftar Rak")
     print("2. Tambah Rak")
     print("3. Edit Rak")
-    print("4. Kembali ke Menu Utama")
+    print("4. Hapus Rak")
+    print("5. Kembali ke Menu Utama")
     print("----------------")
 
 def display_category_menu():
@@ -31,7 +32,8 @@ def display_category_menu():
     print("1. Lihat Daftar Kategori")
     print("2. Tambah Kategori")
     print("3. Edit Kategori")
-    print("4. Kembali ke Menu Utama")
+    print("4. Hapus Kategori")
+    print("5. Kembali ke Menu Utama")
     print("---------------------")
 
 def display_system_menu():

@@ -72,3 +72,41 @@ def edit_category(client_socket):
         print("\nKategori berhasil diupdate.")
     else:
         print("\nGagal:", response.get("messages", "Terjadi kesalahan"))
+
+def delete_category(client_socket):
+    print("\n=== HAPUS KATEGORI ===")
+
+    category_id = input("ID kategori yang akan dihapus: ")
+
+    try:
+        category_id = int(category_id)
+    except ValueError:
+        print("ID kategori harus berupa angka.")
+        return
+
+    confirm = input(
+        "Yakin ingin menghapus kategori ini? (y/n): "
+    )
+
+    if confirm.lower() != "y":
+        print("Penghapusan kategori dibatalkan.")
+        return
+
+    payload = {
+        "category_id": category_id
+    }
+
+    response = send_request(
+        client_socket,
+        "DELETE_CATEGORY",
+        payload
+    )
+
+    if response["status"] is True:
+        print("\nKategori berhasil dihapus.")
+        print("Pesan:", response["messages"])
+    else:
+        print("\nGagal menghapus kategori.")
+        print("Pesan:", response["messages"])
+
+

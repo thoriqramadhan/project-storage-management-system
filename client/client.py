@@ -23,8 +23,8 @@ from client.menu import (
 
 from client.item_operation import add_item, update_stock, delete_item
 from services.process_request import show_items
-from client.rack_operation import show_racks, add_rack, edit_rack
-from client.category_operation import show_categories, add_category, edit_category
+from client.rack_operation import show_racks, add_rack, edit_rack, delete_rack
+from client.category_operation import show_categories, add_category, edit_category, delete_category
 from client.health import check_server_health, show_access_logs
 
 def item_loop(client_socket):
