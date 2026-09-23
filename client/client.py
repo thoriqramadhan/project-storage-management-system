@@ -145,39 +145,32 @@ def main():
     print("\nConnecting to server...")
     print("Server   :", SERVER_HOST, ":", SERVER_PORT)
 
-    try:
-        client_socket = connect_to_server()
-    except ConnectionRefusedError:
-        print("\nGagal terhubung ke server.")
-        return
-    except socket.timeout:
-        print("\nKoneksi ke server timeout.")
-        return
-    except OSError as error:
-        print("\nConnection error:", error)
-        return
+    client_socket = connect_with_retry()
 
-    print("Connected to server!")
+    if client_socket is None:
+        return
 
     while True:
-        display_main_menu()
-        choice = input("Pilih menu utama: ")
+        try: 
+            display_main_menu()
+            choice = input("Pilih menu utama: ")
 
-        if choice == "1":
-            item_loop(client_socket)
-        elif choice == "2":
-            rack_loop(client_socket)
-        elif choice == "3":
-            category_loop(client_socket)
-        elif choice == "4":
-            system_loop(client_socket)
-        elif choice == "5":
-            print("\nDisconnecting...")
-            client_socket.close()
-            print("Client ditutup.")
-            break
-        else:
-            print("\nPilihan tidak valid.")
-
+            if choice == "1":
+                item_loop(client_socket)
+            elif choice == "2":
+                rack_loop(client_socket)
+            elif choice == "3":
+                category_loop(client_socket)
+            elif choice == "4":
+                system_loop(client_socket)
+            elif choice == "5":
+                print("\nDisconnecting...")
+                client_socket.close()
+                print("Client ditutup.")
+                break
+            else:
+                print("\nPilihan tidak valid.")
+        except:
+            print(connect_with_retry())
 if __name__ == "__main__":
     main()
