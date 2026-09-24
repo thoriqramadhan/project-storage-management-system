@@ -228,7 +228,6 @@ def main():
     print("Server   :", SERVER_HOST, ":", SERVER_PORT)
 
     client_socket = connect_with_retry()
-    # client_socket = None
     if client_socket is None:
         return
 
