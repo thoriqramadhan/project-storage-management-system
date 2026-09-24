@@ -102,11 +102,11 @@ def delete_category(client_socket):
         payload
     )
 
-    if response["status"] is True:
+    if response.get("status") is True:
         print("\nKategori berhasil dihapus.")
-        print("Pesan:", response["messages"])
+        print("Pesan:", response.get("messages", "Operasi berhasil."))
     else:
         print("\nGagal menghapus kategori.")
-        print("Pesan:", response["messages"])
+        print("Pesan:", response.get("messages", "Terjadi kesalahan."))
 
 

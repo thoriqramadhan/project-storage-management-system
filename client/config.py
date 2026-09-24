@@ -1,5 +1,5 @@
 
 # SERVER_HOST = "127.0.0.1"
-SERVER_HOST = "gdnhn-114-8-196-162.run.pinggy-free.link"
-# SERVER_PORT = 5000
-SERVER_PORT = 36023
+SERVER_HOST = "ycejl-103-26-189-67.run.pinggy-free.link"
+# SERVER_PORT = 5000 tcp://:tcp://:
+SERVER_PORT = 37791

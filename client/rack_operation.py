@@ -96,7 +96,7 @@ def delete_rack(client_socket):
         "rack_id": rack_id
     }
 
-    print(payload)
+
 
     response = send_request(
         client_socket,
@@ -104,10 +104,10 @@ def delete_rack(client_socket):
         payload
     )
 
-    if response["status"] is True:
+    if response.get("status") is True:
         print("\nRak berhasil dihapus.")
-        print("Pesan:", response["messages"])
+        print("Pesan:", response.get("messages", "Operasi berhasil."))
     else:
         print("\nGagal menghapus rak.")
-        print("Pesan:", response["messages"])
+        print("Pesan:", response.get("messages", "Terjadi kesalahan."))
    

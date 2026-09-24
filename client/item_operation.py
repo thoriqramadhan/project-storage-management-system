@@ -205,7 +205,7 @@ def delete_item(client_socket):
     )
 
     if response.get("status") is True:
-        print("\nBarang berhasil dihapus.")
+        print("Pesan:", response.get("messages", "Barang berhasil dihapus."))
     else:
         print("\nGagal:", response.get("messages", "Terjadi kesalahan"))
 
